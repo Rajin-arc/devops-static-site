@@ -1,0 +1,23 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t static-website .
+
+      - name: Run container test
+        run: |
+          docker run -d -p 8080:80 --name test-site static-website
+          docker stop test-site
+          docker rm test-site
