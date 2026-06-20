@@ -1,26 +1,11 @@
-name: CI-CD Pipeline
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Deploy to VM via SSH
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
-            echo " Connected to VM"
+            echo "Connected to VM"
 
             cd ~
             if [ ! -d devops-static-site ]; then
@@ -34,4 +19,4 @@ jobs:
             docker rm -f website || true
             docker run -d -p 80:80 --name website static-site
 
-            echo " Deployment successful"
+            echo "Deployment successful"
