@@ -20,8 +20,7 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
-
-            echo " Starting deployment on VM"
+            echo " Connected to VM"
 
             cd ~
             if [ ! -d devops-static-site ]; then
@@ -31,13 +30,8 @@ jobs:
             cd devops-static-site
             git pull origin main
 
-            echo " Building Docker image on VM"
             docker build -t static-site .
-
-            echo " Stopping old container"
             docker rm -f website || true
-
-            echo " Running new container"
             docker run -d -p 80:80 --name website static-site
 
             echo " Deployment successful"
